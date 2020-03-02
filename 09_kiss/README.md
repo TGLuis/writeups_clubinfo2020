@@ -1,0 +1,3 @@
+## KISS
+
+![statement](challenge.png)

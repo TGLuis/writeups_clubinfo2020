@@ -1,5 +1,7 @@
 ## Mirror
 
+![statement](challenge.png)
+
 Ce challenge a clairement été créé pour mener à plusieurs fausses pistes.
 
 Tout premièrement, j'ai analysé l'image et essayé de comprendre ce que pouvait signifier les chiffres, j'ai même retrouvé l'image originale utilisée mais c'était effectivement une fausse piste.
