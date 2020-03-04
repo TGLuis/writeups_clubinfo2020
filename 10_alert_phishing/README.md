@@ -8,8 +8,9 @@ Pour attaquer ce challenge, j'ai utilisé le client.py qui est donné dans l'én
 
 La première chose à faire était d'identifier l'encryption utilisée étant donné que rien n'indique quel algo a été utilisé. J'ai donc commencé par envoyer 1000 fois la lettre "a". Et j'ai pu remarquer 2 choses, premièrement, l'algorithme est déterministe (si j'envoie 2 fois le même message, je reçois 2 fois la même réponse), ensuite le grand nombre de "a" dans mon message a donné un pattern qui se répétait dans le message chiffré.
 
-send: 1000*"a"
-received:
+send: 100*"a"
+
+received: 82bc6fa2e74cd4767372b13cfac15f3c8260f2a891638e55715a13c240ffb369d226bfaa2591b8e978b87619f9ea590ad226bfaa2591b8e978b87619f9ea590ad226bfaa2591b8e978b87619f9ea590ad226bfaa2591b8e978b87619f9ea590ad226bfaa2591b8e978b87619f9ea590aca874fcd726efdb7a14318fb704e5471780a41a47081625f567fe33bee6c60b2
 
 J'ai également observé que si j'augmentais l'input progressivement, l'output lui augmentait uniquement par bloc de 16 bytes et donc de 128 bits.
 
@@ -26,18 +27,19 @@ Le script final donne ceci:
 import socket
 import string
 import binascii
+import struct
 
 HOST = "ec2-15-188-238-135.eu-west-3.compute.amazonaws.com"
 PORT = 3000
 CHARSET = string.ascii_letters + string.digits
 
-def get_block_size(self):
+def get_block_size():
     return 16
 
-def guess_max_size_secret(self):
-    return 9
+def guess_max_size_secret():
+    return 16
 
-def break_it(self):
+def break_it():
     print("break it")
     while True:
         max_size_secret = guess_max_size_secret()
@@ -55,16 +57,38 @@ def break_it(self):
                         print("secret add char: ", character)
                         secret += character
                         break
-                if len(secret) == max_size_secret:
+                if len(secret) == 9:
                     return secret
         except Exception as e:
             print(e)
 
+def recvall(sock, n):
+    data = b''
+    addr = None
+    while len(data) < n:
+        packet, addr = sock.recvfrom(n - len(data))
+        if not packet:
+            return None
+        data += packet
+    return data, addr
+
+def send_msg_to_oracle(sock, msg):
+    msg = struct.pack('>I', len(msg)) + msg.encode("utf-8")
+    res = sock.sendall(msg)
+    if not res:
+        return len(msg)
+
+def recv_msg(sock):
+    raw_msglen, _ = recvall(sock, 4)
+    if not raw_msglen:
+        return None
+    msglen = struct.unpack('>I', raw_msglen)[0]
+    return recvall(sock, msglen)
 
 def send_and_receive(msg):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         sock.connect((HOST, PORT))
-        # pre processing to do for the value to "hide" it!!
+        # pre processing to do for the value to remove it!!
         msg = "a"*9 + msg
         resp = send_to_oracle(sock, msg)
         resp = resp[32:]
@@ -79,3 +103,17 @@ print(break_it())
 ```
 
 Quand on le run, il output:
+
+```
+break it
+secret add char:  W
+secret add char:  C
+secret add char:  I
+secret add char:  S
+secret add char:  E
+secret add char:  C
+secret add char:  4
+secret add char:  5
+secret add char:  0
+WCISEC450
+```
