@@ -32,7 +32,7 @@ Vu qu'il y a très peu de bits à 1, la solution est forcément autre part. Apr�
 15,5 = 1
 ```
 
-On soudain on l'a vu, et un oeil entrainé pourra aussi le remarquer. Tous les nombres peuvent être exprimés comme un chiffre hexadécimal. Mais également si on prend l'hexadécimal comme "colonne|ligne" on a des nombres qui tombent presque tous dans les lettres ascii. Donc si on interprète ces nombres comme des ascii, on obtient:
+Et soudain on l'a vu, et un oeil entrainé pourra aussi le remarquer. Tous les nombres peuvent être exprimés comme un chiffre hexadécimal. Mais également si on prend l'hexadécimal comme "colonne|ligne" on a des nombres qui tombent presque tous dans les lettres ascii. Donc si on interprète ces nombres comme des ascii, on obtient:
 
 ```
 0@BsdeJmn_
@@ -44,4 +44,4 @@ Maintenant, il faut se rappeler le hint sur le flag (ça nous a pris un bon mome
 J@mes_B0nd
 ```
 
-Qui est le flag. Vous pouvez trouvez le script dans [analyse_yoda.py](analyse_yoda.py).
+Qui est le flag. Vous pouvez trouvez le script dans [analyze_yoda.py](analyze_yoda.py).
